@@ -1,30 +1,14 @@
-import {Footer} from '@/components';
-import {login} from '@/services/ant-design-pro/api';
-import {getFakeCaptcha} from '@/services/ant-design-pro/login';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import {Helmet, history, useModel} from '@umijs/max';
-import {Alert, Tabs, message} from 'antd';
-import {createStyles} from 'antd-style';
-import React, {useState} from 'react';
-import {flushSync} from 'react-dom';
+import { Footer } from '@/components';
+import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { Helmet } from '@umijs/max';
+import { Alert, Tabs } from 'antd';
+import { createStyles } from 'antd-style';
+import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
-import {SYSTEM_LOGO} from '@/constants';
-import {PLANET_LINK} from "@/constants";
 
-const useStyles = createStyles(({token}) => {
+const useStyles = createStyles(({ token }) => {
   return {
     action: {
       marginLeft: '8px',
@@ -59,22 +43,12 @@ const useStyles = createStyles(({token}) => {
     },
   };
 });
-const ActionIcons = () => {
-  const {styles} = useStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action}/>
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action}/>
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action}/>
-    </>
-  );
-};
 // const Lang = () => {
 //   return;
 // };
 const LoginMessage: React.FC<{
   content: string;
-}> = ({content}) => {
+}> = ({ content }) => {
   return (
     <Alert
       style={{
@@ -87,46 +61,10 @@ const LoginMessage: React.FC<{
   );
 };
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const {initialState, setInitialState} = useModel('@@initialState');
-  const {styles} = useStyles();
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  };
-  const handleSubmit = async (values: API.LoginParams) => {
-    try {
-      // 登录
-      const msg = await login({
-        ...values,
-        type,
-      });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = '登录成功！';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
-    } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
-    }
-  };
-  const {status, type: loginType} = userLoginState;
+  const { styles } = useStyles();
+  const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <Helmet>
@@ -146,13 +84,16 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src={SYSTEM_LOGO}/>}
+          logo={<img alt="logo" src={SYSTEM_LOGO} />}
           title="在login/index里"
-          subTitle={<a href={PLANET_LINK} target='_blank' rel="noreferrer">用户管理中心 from Paul</a>}
+          subTitle={
+            <a href={PLANET_LINK} target="_blank" rel="noreferrer">
+              用户管理中心 from Paul
+            </a>
+          }
           initialValues={{
             autoLogin: true,
           }}
-
         >
           <Tabs
             activeKey={type}
@@ -170,16 +111,16 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {/*{status === 'error' && loginType === 'account' && (*/}
-          {/*  // <LoginMessage content={'错误的账号和密码(admin/ant.design)'} />*/}
-          {/*)}*/}
+          {status === 'error' && loginType === 'account' && (
+            <LoginMessage content={'错误的账号和密码(admin/ant.design)'} />
+          )}
           {type === 'account' && (
             <>
               <ProFormText
                 name="username"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined/>,
+                  prefix: <UserOutlined />,
                 }}
                 placeholder={'请输入账号'} //账号: admin or user
                 rules={[
@@ -193,7 +134,7 @@ const Login: React.FC = () => {
                 name="password"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined/>,
+                  prefix: <LockOutlined />,
                 }}
                 placeholder={'请输入密码'} //密码: ant.design
                 rules={[
@@ -205,7 +146,6 @@ const Login: React.FC = () => {
               />
             </>
           )}
-
 
           <div
             style={{
@@ -219,14 +159,14 @@ const Login: React.FC = () => {
               style={{
                 float: 'right',
               }}
-              href = 'https://www.google.com.hk/?hl=zh_CN'
+              href="https://www.google.com.hk/?hl=zh_CN"
             >
               忘记密码 ?
             </a>
           </div>
         </LoginForm>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
