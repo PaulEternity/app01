@@ -1,6 +1,7 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
+// @ts-ignore
 import { Settings as LayoutSettings, SettingDrawer } from '@ant-design/pro-components';
 import { Link, RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
