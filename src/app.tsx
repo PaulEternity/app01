@@ -1,16 +1,23 @@
 import {AvatarDropdown, AvatarName, Footer, Question} from '@/components';
 import {currentUser as queryCurrentUser} from '@/services/ant-design-pro/api';
 import {LinkOutlined} from '@ant-design/icons';
-import type {Settings as LayoutSettings} from '@ant-design/pro-components';
+import {Settings as LayoutSettings} from '@ant-design/pro-components';
 import {SettingDrawer} from '@ant-design/pro-components';
-import type {RunTimeLayoutConfig} from '@umijs/max';
-import {Link, history} from '@umijs/max';
+import {RequestConfig, RunTimeLayoutConfig} from '@umijs/max';
+import {history, Link} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import {errorConfig} from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-import {RequestConfig} from 'umi';
+
+
+// export const initialStateConfig = {
+//   loading: <PageLoading/>,
+// };
+
+export const request: RequestConfig = {
+  timeout: 1000,
+};
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -127,7 +134,7 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
   };
 };
 
-let errorHandler;
+// let errorHandler;
 /**
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
@@ -138,20 +145,21 @@ let errorHandler;
 // };
 
 
-export const request: {
-  middlewares: any[];
-  responseInterceptors: any[];
-  errorHandler: any;
-  requestInterceptors: any[];
-  timeout: number;
-  errorConfig: {}
-} = {
-  timeout: 1000,
-  errorConfig: {},
-  middlewares: [],
-  requestInterceptors: [],
-  responseInterceptors: [],
-  errorHandler,
-};
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+// export const request: {
+//   middlewares: any[];
+//   responseInterceptors: any[];
+//   errorHandler: any;
+//   requestInterceptors: any[];
+//   timeout: number;
+//   errorConfig: Record<string, never>
+// } = {
+//   timeout: 1000,
+//   errorConfig: {},
+//   middlewares: [],
+//   requestInterceptors: [],
+//   responseInterceptors: [],
+//   errorHandler,
+// };
 
 //全局初始化启动文件

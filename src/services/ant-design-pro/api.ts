@@ -24,7 +24,7 @@ const BASE_PREFIX = process.env ? 'http://localhost:8080/' : 'http:/xxx';
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>(BASE_PREFIX + '/api/login/account', {
+  return request<API.LoginResult>(BASE_PREFIX + '/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
