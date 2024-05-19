@@ -1,14 +1,34 @@
-import { Footer } from '@/components';
-import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+// import { Footer } from '@/components';
+// import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+// import { LockOutlined, UserOutlined } from '@ant-design/icons';
+// import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+//
+// import { Helmet } from '@umijs/max';
+// import {Alert, message, Tabs} from 'antd';
+// import { createStyles } from 'antd-style';
+// import React, { useState } from 'react';
+// import Settings from '../../../../config/defaultSettings';
+// import {login} from "@/services/ant-design-pro/api";
+// import type from "async-validator/dist-types/rule/type";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
-import { Helmet } from '@umijs/max';
-import { Alert, Tabs } from 'antd';
-import { createStyles } from 'antd-style';
+// @ts-ignore
+import { Alert, message, Tabs } from 'antd';
+// @ts-ignore
 import React, { useState } from 'react';
+// @ts-ignore
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+// @ts-ignore
+import Footer from '@/components/Footer';
+import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+import { login } from '@/services/ant-design-pro/api';
+import { history, useModel } from 'umi';
+// import {Link} from "@umijs/preset-dumi/lib/theme";
+import { createStyles } from 'antd-style';
+import { Helmet } from 'react-helmet';
 import Settings from '../../../../config/defaultSettings';
-
-const useStyles = createStyles(({ token }) => {
+// @ts-ignore
+import styles from 'rmc-picker/es/PopupStyles';
+createStyles(({ token }) => {
   return {
     action: {
       marginLeft: '8px',
@@ -60,10 +80,55 @@ const LoginMessage: React.FC<{
     />
   );
 };
+
 const Login: React.FC = () => {
   const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { styles } = useStyles();
+  // const { styles } = useStyles();
+  const { initialState, setInitialState } = useModel('@@initialState');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+    if (userInfo) {
+      await setInitialState((s: any) => {
+        return { ...s, currentUser: userInfo };
+      });
+    }
+  };
+
+  // if (userInfo) {
+  //   flushSync(() => {
+  //     setInitialState((s) => ({
+  //       ...s,
+  //       currentUser: userInfo,
+  //     }));
+  //   });
+  // }
+  const handleSubmit = async (values: API.LoginParams) => {
+    try {
+      // 登录
+      const user = await login({
+        ...values,
+        type,
+      });
+      if (user) {
+        const defaultLoginSuccessMessage = '登录成功！';
+        message.success(defaultLoginSuccessMessage);
+        await fetchUserInfo();
+        if (!history) return;
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/');
+        return;
+      }
+      console.log(user);
+      // 如果失败去设置用户错误信息
+      // setUserLoginState(user);
+    } catch (error) {
+      const defaultLoginFailureMessage = '登录失败，请重试！';
+      console.log(error);
+      message.error(defaultLoginFailureMessage);
+    }
+  };
   const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
@@ -94,6 +159,9 @@ const Login: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
+          onFinish={async (values) => {
+            await handleSubmit(values as API.LoginParams);
+          }}
         >
           <Tabs
             activeKey={type}
@@ -117,7 +185,7 @@ const Login: React.FC = () => {
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="userAccount"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
@@ -131,7 +199,7 @@ const Login: React.FC = () => {
                 ]}
               />
               <ProFormText.Password
-                name="password"
+                name="userPassword"
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined />,
@@ -141,6 +209,11 @@ const Login: React.FC = () => {
                   {
                     required: true,
                     message: '密码是必填项！',
+                  },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: '密码长度不能小于8',
                   },
                 ]}
               />
@@ -170,4 +243,5 @@ const Login: React.FC = () => {
     </div>
   );
 };
+
 export default Login;
