@@ -38,7 +38,15 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果不是登录页面，执行
+  // 重定向逻辑，注释掉就不会影响页面跳转
   const { location } = history;
+  const whiteList = ['/user/login', '/user/register'];
+  if (whiteList.includes(location.pathname)) {
+    return {
+      fetchUserInfo,
+      settings: defaultSettings as Partial<LayoutSettings>,
+    };
+  }
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
     return {
