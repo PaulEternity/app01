@@ -1,34 +1,42 @@
-// import { Footer } from '@/components';
-// import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
-// import { LockOutlined, UserOutlined } from '@ant-design/icons';
-// import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
-//
-// import { Helmet } from '@umijs/max';
-// import {Alert, message, Tabs} from 'antd';
-// import { createStyles } from 'antd-style';
-// import React, { useState } from 'react';
-// import Settings from '../../../../config/defaultSettings';
-// import {login} from "@/services/ant-design-pro/api";
-// import type from "async-validator/dist-types/rule/type";
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-// @ts-ignore
-import { Alert, message, Tabs } from 'antd';
-// @ts-ignore
-import React, { useState } from 'react';
-// @ts-ignore
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-// @ts-ignore
-import Footer from '@/components/Footer';
-import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
-import { history, useModel } from 'umi';
-// import {Link} from "@umijs/preset-dumi/lib/theme";
+import {
+  LockOutlined,
+  // MobileOutlined,
+  // TaobaoCircleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import {
+  LoginForm,
+  // ProFormCaptcha,
+  ProFormCheckbox,
+  ProFormText,
+} from '@ant-design/pro-form';
+import { Helmet, history, useModel } from '@umijs/max';
+import { Alert, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
-import { Helmet } from 'react-helmet';
+import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
-// @ts-ignore
-import styles from 'rmc-picker/es/PopupStyles';
-createStyles(({ token }) => {
+// import { LockOutlined, UserOutlined } from '@ant-design/icons';
+// // @ts-ignore
+// import { Alert, message, Tabs } from 'antd';
+// // @ts-ignore
+// import React, { useState } from 'react';
+// // @ts-ignore
+// import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+// // @ts-ignore
+// import Footer from '@/components/Footer';
+// import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
+// import { login } from '@/services/ant-design-pro/api';
+// import { history, useModel } from 'umi';
+// // import {Link} from "@umijs/preset-dumi/lib/theme";
+// import { createStyles } from 'antd-style';
+// import { Helmet } from 'react-helmet';
+// import Settings from '../../../../config/defaultSettings';
+// // @ts-ignore
+// import styles from 'rmc-picker/es/PopupStyles';
+
+const useStyles = createStyles(({ token }) => {
   return {
     action: {
       marginLeft: '8px',
@@ -86,6 +94,7 @@ const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
   // const { styles } = useStyles();
   const { initialState, setInitialState } = useModel('@@initialState');
+  const { styles } = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -149,10 +158,10 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src={SYSTEM_LOGO} />}
+          logo={<img alt="logo" src="girl.jpg" />}
           title="在login/index里"
           subTitle={
-            <a href={PLANET_LINK} target="_blank" rel="noreferrer">
+            <a href="https://github.com/" target="_blank" rel="noreferrer">
               用户管理中心 from Paul
             </a>
           }
