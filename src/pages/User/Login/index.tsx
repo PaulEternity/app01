@@ -17,24 +17,6 @@ import { Alert, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
-// import { LockOutlined, UserOutlined } from '@ant-design/icons';
-// // @ts-ignore
-// import { Alert, message, Tabs } from 'antd';
-// // @ts-ignore
-// import React, { useState } from 'react';
-// // @ts-ignore
-// import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-// // @ts-ignore
-// import Footer from '@/components/Footer';
-// import { PLANET_LINK, SYSTEM_LOGO } from '@/constants';
-// import { login } from '@/services/ant-design-pro/api';
-// import { history, useModel } from 'umi';
-// // import {Link} from "@umijs/preset-dumi/lib/theme";
-// import { createStyles } from 'antd-style';
-// import { Helmet } from 'react-helmet';
-// import Settings from '../../../../config/defaultSettings';
-// // @ts-ignore
-// import styles from 'rmc-picker/es/PopupStyles';
 
 const useStyles = createStyles(({ token }) => {
   return {
