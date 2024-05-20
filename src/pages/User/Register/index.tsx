@@ -1,17 +1,12 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  // MobileOutlined,
-  // TaobaoCircleOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { register } from '@/services/ant-design-pro/api';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 // @ts-ignore
 import { LoginForm, ProFormText } from '@ant-design/pro-form';
 // @ts-ignore
 import { Helmet, history } from '@umijs/max';
 // @ts-ignore
-import { Alert, Tabs, message } from 'antd';
+import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 // @ts-ignore
 import React, { useState } from 'react';
@@ -77,23 +72,48 @@ const Register: React.FC = () => {
   // const { initialState} = useModel('@@initialState');
   // const {styles} = useStyles();
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.RegisterParams) => {
+    const { userPassword, checkPassword } = values; //获取
+    //校验
+    if (userPassword !== checkPassword) {
+      message.error('两次密码不一致！');
+      return;
+    }
     try {
+      const id = await register(values);
       // 注册
-      const user = await login({
-        ...values,
-        type,
-      });
-      if (user) {
+      // const user = await login({
+      //   ...values,
+      //   type,
+      // });
+      if (id > 0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
+
         // await fetchUserInfo();
         if (!history) return;
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+
+        const searchParams = new URLSearchParams(history.location.search);
+        const redirect = searchParams.get('redirect');
+
+        if (!redirect) {
+          // 处理未获取到 redirect 参数的情况
+        }
+
+        // 继续处理 redirect 参数
+
+        // if (!history) return;
+        // const {query} = history.location;
+        // const {redirect} = query as{
+        //   redirect:string;
+        // };
+        // const urlParams = new URL(window.location.href).searchParams;
+        history.push('user/login?redirect' + redirect); //重定向
         return;
+      } else {
+        throw new Error(`register error id = ${id}`);
       }
-      console.log(user);
+      // console.log(id);
       // 如果失败去设置用户错误信息
       // setUserLoginState(user);
     } catch (error) {
@@ -118,9 +138,10 @@ const Register: React.FC = () => {
         }}
       >
         <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
+          submitter={{
+            searchConfig: {
+              submitText: '注册',
+            },
           }}
           logo={<img alt="logo" src="girl.jpg" />}
           title="在login/index里"
@@ -133,7 +154,7 @@ const Register: React.FC = () => {
             autoLogin: true,
           }}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.RegisterParams);
           }}
         >
           <Tabs
