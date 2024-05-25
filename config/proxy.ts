@@ -22,6 +22,13 @@ export default {
     },
   },
 
+  proxy: {
+    '/server/api/': {
+      target: 'https://localhost:8080',
+      changeOrigin: true,
+      pathRewrite: { '^/server': '' }, // /server/api/currentUser -> /api/currentUser
+    },
+  },
   /**
    * @name 详细的代理配置
    * @doc https://github.com/chimurai/http-proxy-middleware

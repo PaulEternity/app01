@@ -6,7 +6,8 @@ import { LoginForm, ProFormText } from '@ant-design/pro-form';
 // @ts-ignore
 import { Helmet, history } from '@umijs/max';
 // @ts-ignore
-import { Alert, message, Tabs } from 'antd';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 // @ts-ignore
 import React, { useState } from 'react';
@@ -50,81 +51,46 @@ const useStyles = createStyles(({ token }) => {
 // const Lang = () => {
 //   return;
 // };
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
 
 const Register: React.FC = () => {
-  const [userLoginState] = useState<API.LoginResult>({});
+  // const [userLoginState] = useState<API.RegisterResult>({});
   const [type, setType] = useState<string>('account');
-  const { styles } = useStyles();
+  const {
+    styles: { container },
+  } = useStyles();
   // const { initialState} = useModel('@@initialState');
   // const {styles} = useStyles();
 
   const handleSubmit = async (values: API.RegisterParams) => {
-    const { userPassword, checkPassword } = values; //获取
-    //校验
+    const { userPassword, checkPassword } = values;
+
     if (userPassword !== checkPassword) {
-      message.error('两次密码不一致！');
+      message.error('两次输入的密码不一致');
       return;
     }
+
     try {
       const id = await register(values);
-      // 注册
-      // const user = await login({
-      //   ...values,
-      //   type,
-      // });
-      if (id > 0) {
+      if (id) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
 
-        // await fetchUserInfo();
         if (!history) return;
-
-        const searchParams = new URLSearchParams(history.location.search);
-        const redirect = searchParams.get('redirect');
-
-        if (!redirect) {
-          // 处理未获取到 redirect 参数的情况
-        }
-
-        // 继续处理 redirect 参数
-
-        // if (!history) return;
-        // const {query} = history.location;
-        // const {redirect} = query as{
-        //   redirect:string;
-        // };
-        // const urlParams = new URL(window.location.href).searchParams;
-        history.push('user/login?redirect' + redirect); //重定向
+        const { query } = history.location;
+        history.push({
+          pathname: '/user/login',
+          query,
+        });
         return;
-      } else {
-        throw new Error(`register error id = ${id}`);
       }
-      // console.log(id);
-      // 如果失败去设置用户错误信息
-      // setUserLoginState(user);
-    } catch (error) {
+    } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+
   return (
-    <div className={styles.container}>
+    <div className={container}>
       <Helmet>
         <title>
           {'注册'}- {Settings.title}
@@ -143,7 +109,7 @@ const Register: React.FC = () => {
               submitText: '注册',
             },
           }}
-          logo={<img alt="logo" src="girl.jpg" />}
+          logo={<img alt="logo" src="" />}
           title="在login/index里"
           subTitle={
             <a href="https://github.com/" target="_blank" rel="noreferrer">
@@ -166,16 +132,8 @@ const Register: React.FC = () => {
                 key: 'account',
                 label: '账户密码注册',
               },
-              // {
-              //   key: 'mobile',
-              //   label: '手机号注册',
-              // },
             ]}
           />
-
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的账号和密码(admin/ant.design)'} />
-          )}
           {type === 'account' && (
             <>
               <ProFormText
