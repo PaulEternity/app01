@@ -100,13 +100,19 @@ const Register: React.FC = () => {
           // 处理未获取到 redirect 参数的情况
         }
 
-        // history.push('user/login?redirect=' + redirect); //修正重定向参数
-        history.push('login'); //修正重定向参数
+        // 继续处理 redirect 参数
+
+        // if (!history) return;
+        // const {query} = history.location;
+        // const {redirect} = query as{
+        //   redirect:string;
+        // };
+        // const urlParams = new URL(window.location.href).searchParams;
+        history.push('user/login?redirect' + redirect); //重定向
         return;
       } else {
         throw new Error(`register error id = ${id}`);
       }
-
       // console.log(id);
       // 如果失败去设置用户错误信息
       // setUserLoginState(user);
