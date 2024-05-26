@@ -20,7 +20,7 @@ export async function outLogin(options?: { [key: string]: any }) {
   });
 }
 
-const BASE_PREFIX = process.env ? 'http://localhost:8080/' : 'http:/xxx';
+const BASE_PREFIX = process.env ? 'http://localhost:8080' : 'http:/xxx';
 
 /** 登录接口 POST /api/user/login */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
