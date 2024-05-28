@@ -1,6 +1,11 @@
 import { addRule, removeRule, rule, updateRule } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import type {
+  ActionType,
+  ProColumns,
+  ProDescriptionsItemProps,
+  // @ts-ignore
+} from '@ant-design/pro-components';
 import {
   FooterToolbar,
   ModalForm,
@@ -9,9 +14,12 @@ import {
   ProFormText,
   ProFormTextArea,
   ProTable,
+  // @ts-ignore
 } from '@ant-design/pro-components';
 import '@umijs/max';
+// @ts-ignore
 import { Button, Drawer, Input, message } from 'antd';
+// @ts-ignore
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -99,6 +107,8 @@ const TableList: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
 
+  // @ts-ignore
+  // @ts-ignore
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
@@ -108,7 +118,7 @@ const TableList: React.FC = () => {
     {
       title: '规则名称',
       dataIndex: 'name',
-      tip: 'The rule name is the unique key',
+      // tip: 'The rule name is the unique key',
       render: (dom, entity) => {
         return (
           <a

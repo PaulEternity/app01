@@ -1,3 +1,4 @@
+// @ts-ignore
 import {
   ProFormDateTimePicker,
   ProFormRadio,
@@ -5,9 +6,12 @@ import {
   ProFormText,
   ProFormTextArea,
   StepsForm,
+  // @ts-ignore
 } from '@ant-design/pro-components';
 import '@umijs/max';
+// @ts-ignore
 import { Modal } from 'antd';
+// @ts-ignore
 import React from 'react';
 export type FormValueType = {
   target?: string;

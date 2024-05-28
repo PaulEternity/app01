@@ -9,6 +9,7 @@ import { Helmet, history } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 // @ts-ignore
+import { SYSTEM_LOGO } from '@/constants';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
 
@@ -102,12 +103,6 @@ const Register: React.FC = () => {
 
         // 继续处理 redirect 参数
 
-        // if (!history) return;
-        // const {query} = history.location;
-        // const {redirect} = query as{
-        //   redirect:string;
-        // };
-        // const urlParams = new URL(window.location.href).searchParams;
         history.push('user/login?redirect' + redirect); //重定向
         return;
       } else {
@@ -143,7 +138,7 @@ const Register: React.FC = () => {
               submitText: '注册',
             },
           }}
-          logo={<img alt="logo" src="girl.jpg" />}
+          logo={<img alt="logo" src={SYSTEM_LOGO} />} //在constants的index.ts里
           title="在login/index里"
           subTitle={
             <a href="https://github.com/" target="_blank" rel="noreferrer">

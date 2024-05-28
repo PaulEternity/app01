@@ -1,5 +1,8 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
+﻿// @ts-ignore
+import type { RequestOptions } from '@@/plugin-request/request';
+// @ts-ignore
 import type { RequestConfig } from '@umijs/max';
+// @ts-ignore
 import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
@@ -19,6 +22,7 @@ interface ResponseStructure {
   showType?: ErrorShowType;
 }
 
+// @ts-ignore
 /**
  * @name 错误处理
  * pro 自带的错误处理， 可以在这里做自己的改动
@@ -28,7 +32,7 @@ export const errorConfig: RequestConfig = {
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
     // 错误抛出
-    errorThrower: (res) => {
+    errorThrower: ({ res }: { res: any }) => {
       const { success, data, errorCode, errorMessage, showType } =
         res as unknown as ResponseStructure;
       if (!success) {

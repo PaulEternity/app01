@@ -9,6 +9,10 @@ import defaultSettings from '../config/defaultSettings';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+/**
+ * 无需登录的页面
+ */
+const NO_NEED_LOGIN_WHITE_LIST = ['/user/login', '/user/register']; //白名单
 // export const initialStateConfig = {
 //   loading: <PageLoading/>,
 // };
@@ -28,10 +32,10 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
+      const user = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      return user.data;
     } catch (error) {
       history.push(loginPath);
     }
@@ -40,8 +44,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   // 重定向逻辑，注释掉就不会影响页面跳转
   const { location } = history;
-  const whiteList = ['/user/login', '/user/register'];
-  if (whiteList.includes(location.pathname)) {
+  if (NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
     return {
       fetchUserInfo,
       settings: defaultSettings as Partial<LayoutSettings>,
@@ -66,6 +69,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
+      // @ts-ignore
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
@@ -73,6 +77,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
     },
     waterMarkProps: {
+      // @ts-ignore
       content: initialState?.currentUser?.name,
     },
     footerRender: () => <Footer />,
