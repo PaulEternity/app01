@@ -103,7 +103,7 @@ const Register: React.FC = () => {
 
         // 继续处理 redirect 参数
 
-        history.push('user/login?redirect' + redirect); //重定向
+        history.push('/api/user/login?redirect' + redirect); //重定向
         return;
       } else {
         throw new Error(`register error id = ${id}`);

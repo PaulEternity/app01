@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import { SYSTEM_LOGO } from '@/constants';
 import { login } from '@/services/ant-design-pro/api';
 import {
   LockOutlined,
@@ -72,7 +73,7 @@ const LoginMessage: React.FC<{
 };
 
 const Login: React.FC = () => {
-  const [userLoginState] = useState<API.LoginResult>({});
+  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   // const { styles } = useStyles();
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -87,14 +88,6 @@ const Login: React.FC = () => {
     }
   };
 
-  // if (userInfo) {
-  //   flushSync(() => {
-  //     setInitialState((s) => ({
-  //       ...s,
-  //       currentUser: userInfo,
-  //     }));
-  //   });
-  // }
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
@@ -107,10 +100,15 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         if (!history) return;
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        // @ts-ignore
+        const { query } = history.location;
+        const { redirect } = query as {
+          redirect: string;
+        };
+        history.push(redirect || '/');
         return;
       }
+      setUserLoginState(user);
       console.log(user);
       // 如果失败去设置用户错误信息
       // setUserLoginState(user);
@@ -140,7 +138,7 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="girl.jpg" />}
+          logo={<img alt="logo" src={SYSTEM_LOGO} />}
           title="在login/index里"
           subTitle={
             <a href="https://github.com/" target="_blank" rel="noreferrer">
@@ -161,7 +159,7 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账户密码登录',
+                label: '账号密码登录',
               },
               // {
               //   key: 'mobile',

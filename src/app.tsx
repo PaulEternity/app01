@@ -1,29 +1,35 @@
-import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { Footer } from '@/components';
+import { currentUser, currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
-// @ts-ignore
 import { Settings as LayoutSettings, SettingDrawer } from '@ant-design/pro-components';
-import { Link, RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
+import { Link, RunTimeLayoutConfig, history } from '@umijs/max';
+import { RequestConfig } from 'umi';
 import defaultSettings from '../config/defaultSettings';
-
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /**
  * 无需登录的页面
  */
-const NO_NEED_LOGIN_WHITE_LIST = ['/user/login', '/user/register']; //白名单
+const NO_NEED_LOGIN_WHITE_LIST = ['/user/register', loginPath]; //白名单
+
 // export const initialStateConfig = {
 //   loading: <PageLoading/>,
 // };
 
 export const request: RequestConfig = {
-  timeout: 10000,
+  timeout: 1000000000,
+  errorConfig: {},
+  middlewares: [],
+  requestInterceptors: [],
+  responseInterceptors: [],
+  // errorHandler,
 };
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
+// @ts-ignore
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
@@ -32,16 +38,13 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const user = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      return user.data;
+      return await queryCurrentUser();
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
+  // 如果无须登录页面，执行
   // 重定向逻辑，注释掉就不会影响页面跳转
   const { location } = history;
   if (NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
@@ -50,16 +53,10 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
-  if (location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
-    return {
-      fetchUserInfo,
-      currentUser,
-      settings: defaultSettings as Partial<LayoutSettings>,
-    };
-  }
   return {
     fetchUserInfo,
+    //@ts-ignore
+    currentUser,
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
@@ -67,18 +64,12 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />],
-    avatarProps: {
-      // @ts-ignore
-      src: initialState?.currentUser?.avatar,
-      title: <AvatarName />,
-      render: (_, avatarChildren) => {
-        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
-      },
-    },
+    // eslint-disable-next-line react/jsx-no-undef
+    // rightContentRender: () => <RightContent />,
+    disableContentMargin: false,
     waterMarkProps: {
       // @ts-ignore
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -120,12 +111,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    childrenRender: (children) => {
+    childrenRender: (children, props) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
         <>
           {children}
-          {isDev && (
+          {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer
               disableUrlParams
               enableDarkTheme
@@ -151,25 +142,5 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-// export const request = {
-//   ...errorConfig,
-// };
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-// export const request: {
-//   middlewares: any[];
-//   responseInterceptors: any[];
-//   errorHandler: any;
-//   requestInterceptors: any[];
-//   timeout: number;
-//   errorConfig: Record<string, never>
-// } = {
-//   timeout: 1000,
-//   errorConfig: {},
-//   middlewares: [],
-//   requestInterceptors: [],
-//   responseInterceptors: [],
-//   errorHandler,
-// };
 
 //全局初始化启动文件

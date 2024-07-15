@@ -5,9 +5,7 @@ import { request } from '@umijs/max';
 
 /** 获取当前的用户 GET /api/current */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request<{
-    data: API.CurrentUser;
-  }>('/api/user/current', {
+  return request<API.CurrentUser>('/api/user/current', {
     method: 'GET',
     ...(options || {}),
   });
@@ -25,7 +23,7 @@ const BASE_PREFIX = process.env ? 'http://localhost:8080' : 'http:/xxx';
 
 /** 登录接口 POST /api/user/login */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>(BASE_PREFIX + '/user/login', {
+  return request<API.LoginResult>(BASE_PREFIX + '/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,12 +35,20 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 
 /** 注册接口 POST /api/user/register */
 export async function register(body: API.RegisterParams, options?: { [key: string]: any }) {
-  return request<API.RegisterResult>(BASE_PREFIX + '/user/register', {
+  return request<API.RegisterResult>(BASE_PREFIX + '/api/user/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 搜索用户 GET /api/user/search */
+export async function searchUsers(options?: { [key: string]: any }) {
+  return request<API.CurrentUser[]>('/api/user/search', {
+    method: 'GET',
     ...(options || {}),
   });
 }
