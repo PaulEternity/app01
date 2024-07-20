@@ -12,6 +12,7 @@ import { createStyles } from 'antd-style';
 import { SYSTEM_LOGO } from '@/constants';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
+// import BaseResponse = API.BaseResponse;
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -81,19 +82,17 @@ const Register: React.FC = () => {
       return;
     }
     try {
-      const id = await register(values);
+      const res = await register(values);
       // 注册
       // const user = await login({
       //   ...values,
       //   type,
       // });
-      if (id > 0) {
+      if (res.code === 0 && res.data > 0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
-
         // await fetchUserInfo();
         if (!history) return;
-
         const searchParams = new URLSearchParams(history.location.search);
         const redirect = searchParams.get('redirect');
 
@@ -103,18 +102,18 @@ const Register: React.FC = () => {
 
         // 继续处理 redirect 参数
 
-        history.push('/api/user/login?redirect' + redirect); //重定向
+        history.push('/user/login'); //重定向
         return;
       } else {
-        throw new Error(`register error id = ${id}`);
+        throw new Error(res.description);
       }
       // console.log(id);
       // 如果失败去设置用户错误信息
       // setUserLoginState(user);
-    } catch (error) {
+    } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
       console.log(error);
-      message.error(defaultLoginFailureMessage);
+      message.error(error.message ?? defaultLoginFailureMessage);
     }
   };
   const { status, type: loginType } = userLoginState;
@@ -161,10 +160,6 @@ const Register: React.FC = () => {
                 key: 'account',
                 label: '账户密码注册',
               },
-              // {
-              //   key: 'mobile',
-              //   label: '手机号注册',
-              // },
             ]}
           />
 
@@ -222,6 +217,20 @@ const Register: React.FC = () => {
                     min: 8,
                     type: 'string',
                     message: '密码长度不能小于8',
+                  },
+                ]}
+              />
+              <ProFormText
+                name="planetCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined />,
+                }}
+                placeholder={'请输入编号'} //账号: admin or user
+                rules={[
+                  {
+                    required: true,
+                    message: '账号是必填项！',
                   },
                 ]}
               />

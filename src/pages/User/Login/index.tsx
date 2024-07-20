@@ -73,9 +73,8 @@ const LoginMessage: React.FC<{
 };
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  // const { styles } = useStyles();
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -108,10 +107,6 @@ const Login: React.FC = () => {
         history.push(redirect || '/');
         return;
       }
-      setUserLoginState(user);
-      console.log(user);
-      // 如果失败去设置用户错误信息
-      // setUserLoginState(user);
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
       console.log(error);
@@ -139,7 +134,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src={SYSTEM_LOGO} />}
-          title="在login/index里"
+          title="用户中心"
           subTitle={
             <a href="https://github.com/" target="_blank" rel="noreferrer">
               用户管理中心 from Paul
@@ -161,13 +156,8 @@ const Login: React.FC = () => {
                 key: 'account',
                 label: '账号密码登录',
               },
-              // {
-              //   key: 'mobile',
-              //   label: '手机号登录',
-              // },
             ]}
           />
-
           {status === 'error' && loginType === 'account' && (
             <LoginMessage content={'错误的账号和密码(admin/ant.design)'} />
           )}
@@ -208,7 +198,6 @@ const Login: React.FC = () => {
               />
             </>
           )}
-
           <div
             style={{
               marginBottom: 24,
